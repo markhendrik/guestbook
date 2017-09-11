@@ -1,0 +1,179 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "New Business Customer";
+
+}
+
+<h2>New Business Customer</h2>
+
+
+<form action="/home" method="post" >
+    <div class="form-group">
+        <label>Name</label>
+            <input id="name" name="name"  required type="text" value="" class="form-control" />
+
+    </div>
+
+    <div class="form-group">
+        <label>Information</label>
+   
+            <input id="information" name="information"  type="text" value="" class="form-control" />
+ 
+    </div>
+    
+    <div class="form-group">
+        <label>ID Code</label>
+            <input id="IdCode" name="IdCode"  required type="text" value="" class="form-control" />
+    </div>
+
+    <button id="enter" class="btn btn-primary">Submit</button>
+
+</form>
+
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+
+  
+
+            $("#enter").click(function() {
+                //var name = $("#name").val();
+                //var code = $("#IdCode").val();
+                //var information = $("#information").val();
+                //vm.name = name;
+                //vm.code = code;
+                //vm.information = information;
+                //vm.paymentTypeId = valueOf(1);
+                //vm.guestTypeId = valueOf(2);
+                //vm.numberGuests = valueOf(1);
+
+                var vm = {
+                    "name": $('input[name="name"]').val(),
+                    "code": $('input[name="IdCode"]').val(),
+                    "information": $('input[name="information"]').val(),
+                    "paymentTypeId": 1,
+                    "guestTypeId": 1,
+                    "numberGuests": 1
+                }
+                $.ajax({
+                        type: "POST",
+                        url: "/api/guests",
+                        //data: JSON.stringify(vm)
+                        data: vm,
+                        dataType: "json"
+                    //,
+                        //contentType: "application/json; charset=utf-8"
+                    //: "application/json; charset=utf-8"
+                //        success: function (response) {
+                //            if (response.d === true) {
+                //                alert("You will now be redirected.");
+                //                window.location = "//www.aspsnippets.com/";
+                //            }
+                //        },
+                //        failure: function (response) {
+                //            alert(response.d);
+                //        }
+                //    }
+                //).readyState(function() {
+                //    window.location = "//www.aspsnippets.com/";
+                });
+            });
+        });
+  
+
+
+
+
+        @*
+
+            var customers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/customers?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            var movies = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/movies?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#customer').typeahead({
+                    minLength: 3,
+                    highlight: true
+                },
+                {
+                    name: 'customers',
+                    display: 'name',
+                    source: customers
+                }).on("typeahead:select", function(e, customer) {
+                vm.customerId = customer.id;
+            });
+
+
+            $('#movie').typeahead({
+                    minLength: 3,
+                    highlight: true
+                },
+                {
+                    name: 'movies',
+                    display: 'name',
+                    source: movies
+                }).on("typeahead:select", function (e, movie) {
+                $("#movies").append("<li class='list-group-item'>" + movie.name + "</li>");
+
+                $("#movie").typeahead("val", "");
+
+                vm.movieIds.push(movie.id);
+            });
+
+            $.validator.addMethod("validCustumer",
+                function() {
+                    return vm.customerId && vm.customerId !== 0;
+                }, "Please select a valid customer.");
+
+            $.validator.addMethod("hasMovies",
+                function() {
+                    return vm.movieIds.length > 0;
+                }, "You have to choose at least one movie to rent.");
+
+            var validator = $("#newRental").validate({
+                submitHandler: function() {
+                    $.ajax({
+                        url: "/api/newRentals",
+                        method: "post",
+                        data: vm
+                    }).done(function () {
+                        toastr.success("Rentals successfully recorded.");
+
+                        $("#customer").typeahead("val", "");
+                        $("#movie").typeahead("val", "");
+                        $("#movies").empty();
+
+                        vm = { movieIds: [] };
+
+                        validator.resetForm();
+                    }).fail(function () {
+                        toastr.error("Something unexpected happened.");
+                    });
+
+                    return false;
+                }
+            });
+
+
+        });
+            *@
+    </script>
+
+}

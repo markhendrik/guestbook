@@ -1,0 +1,73 @@
+﻿@model GuestBook.ViewModels.GuestFormViewModel
+
+
+@using (Html.BeginForm("SavePrivateClient", "Guests", FormMethod.Post, new { @id = "privateGuestForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>New Private client</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label class="control-label col-md-2">Name</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">ID number</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @*@Html.LabelFor(model => model.PaymentTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PaymentTypeId, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PaymentTypeId, "", new { @class = "text-danger" })
+                </div>*@
+            <label class="control-label col-md-2">Payment type</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.PaymentTypeId, new SelectList(Model.PaymentTypes, "Id", "Name"), "Select Payment type", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PaymentTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Additional information</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Information, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Information, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        @Html.HiddenFor(m => m.NumberGuests)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+    $(document).ready(function() {
+        $('#privateGuestForm').submit(function (ev) {
+            toastr.success('New private client has created.');
+        });
+    });
+    </script>
+}
+
+

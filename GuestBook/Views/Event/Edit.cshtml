@@ -1,0 +1,173 @@
+﻿@model GuestBook.ViewModels.EventFormViewModel
+
+<h4>@Model.Name</h4>
+<hr />
+
+<form id="newEvent" class="form-horizontal">
+    <div class="form-group">
+        <label class="control-label col-md-2">Event name</label>
+        <div class="col-md-10">
+            <input id="name" name="name" required type="text" value="@Model.Name" class="form-control" />           
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-md-2">Event address</label>
+        <div class="col-md-10">
+            <input id="address" name="address"  required type="text" value="@Model.Address" class="form-control" />
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-md-2">Beginning time</label>
+        <div class="col-md-10">        
+                <input id="dateBeg" name="dateBeg" data-date-format="DD MM YYYY" required type="date" value="@Model.DateBeg.ToString("yyyy-MM-dd")" class="form-control"/>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-md-2">Ending time</label>
+        <div class="col-md-10">
+                <input id="dateEnd" name="dateEnd" data-rule-validEndDate="true" data-date-format="DD MM YYYY" required type="date" value="@Model.DateEnd.ToString("yyyy-MM-dd")" class="form-control"/>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-md-2">Information</label>
+        <div class="col-md-10">
+            <input id="information" name="information"  required type="text" value="@Model.Information" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Guest</label>
+        <div class="col-md-10 tt-container">
+            <input id="guest" name="guest" type="text" value="" class="form-control" />
+        </div>
+    </div>
+    
+    <hr/>
+    <div class="row">
+        <h4>All participants:</h4>
+        <div class="col-md-4 col-sm-4"><ul id="guests" class="list-group">
+            @foreach (var guest in @Model.Guests)
+            {
+                <li id=@guest.Id class='list-group-item'>
+                    @guest.Name<span class="del btn btn-link btn-xs" id=guest.id>delete</span>
+                </li>
+            }
+            </ul>
+        </div>
+    </div>
+
+    <button class="btn btn-primary">Submit</button>
+   
+
+</form>
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function() {
+
+
+            var vm = {
+            };
+            var gIds = [];
+            $("#guests").children().each(function () {
+                gIds.push(parseInt(this.id));
+            });
+
+            var guests = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/guests?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#guest').typeahead({
+                    minLength: 2,
+                    highlight: true
+                },
+                {
+                    name: 'guests',
+                    display: 'name',
+                    source: guests
+                }).on("typeahead:select",
+                function(e, guest) {
+                    $("#guests").append("<li id='" +
+                        guest.id +
+                        "' class='list-group-item'>" +
+                        guest.name +
+                        "<span class='del btn btn-link btn-xs' id=" +
+                        guest.id +
+                        ">delete</span></li>");
+
+                    $("#guest").typeahead("val", "");
+
+                    gIds.push(guest.id);
+                });
+
+            $.validator.addMethod("validEndDate",
+                function () {
+                    var endDate = document.getElementById("dateEnd").valueAsDate;
+                    var begDate = document.getElementById("dateBeg").valueAsDate;
+                    return endDate >= begDate;
+                }, "Event ending should be after it's beginning");
+
+
+            var validator = $("#newEvent").validate({
+                submitHandler: function () {
+                    
+                    vm = {
+                        "name": $('input[name="name"]').val(),
+                        "address": $('input[name="address"]').val(),
+                        "dateBeg": $('input[name="dateBeg"]').val(),
+                        "dateEnd": $('input[name="dateEnd"]').val(),
+                        "information": $('input[name="information"]').val(),
+                        "guestsIds": gIds
+                    }
+
+                $.ajax({
+                    url: "/api/newEvent/" + @Model.Id,
+                    method: "put",
+                    data: vm
+                }).done(function() {
+                toastr.success("Event successfully changed.");
+                $('input[name="name"]').val(""),
+                    $('input[name="address"]').val(""),
+                    $('input[name="dateBeg"]').val(""),
+                    $('input[name="dateEnd"]').val(""),
+                    $('input[name="information"]').val(""),
+                    $("#guests").empty();
+
+                vm = {};
+
+                validator.resetForm();
+                window.location.href = "/event/";
+            }).fail(function() {
+            toastr.error("Something unexpected happened.");
+        });
+
+        return false;
+        }
+        });
+
+        $("#guests").on("click",
+            ".del",
+            function(e) {
+                e.preventDefault();
+                var romoveElemId = $(this).attr("id");
+                gIds = gIds.filter(function(item) {
+                    return item !== parseInt(romoveElemId);
+                });
+                $(this).parent().remove();
+
+            });
+
+    });
+
+    </script>
+}

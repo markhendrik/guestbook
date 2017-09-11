@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "GuestBook";
+}
+
+<div class="jumbotron">
+    <h1>GuestBook</h1>
+    <p class="lead">GuestBook is an application for creating a client base and managing events for them.</p>
+    @*<p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Client base</h2>
+        <p>There are two different types of client who would be the guests of upcoming events.</p>
+        <p>Try to add new clients:</p>
+        <p><a class="btn btn-default" href="~/Guests/CreateClient?clientType=private">Private client</a>
+        <a class="btn btn-default" href="~/Guests/CreateClient?clientType=business">Business client</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Creating a new event</h2>
+        <p>When creating a new event you would enter details about the event and at the same form the selection of all custumers is available.</p>
+        <p><a class="btn btn-default" href="~/Event/New">Create a new Event</a>
+        </p>
+    </div>
+    <div class="col-md-4">
+        <h2>Manage upcoming and already passed events</h2>
+        <p>The application allows user to see and edit the details of an event. Thats for upcoming and already passed events.</p>
+        <p><a class="btn btn-default" href="~/Event">Upcoming events</a>
+        <a class="btn btn-default" href="~/Event?isPassed=True">Allready passed events</a>
+        </p>
+    </div>
+   
+</div>

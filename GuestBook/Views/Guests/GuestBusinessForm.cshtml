@@ -1,0 +1,69 @@
+﻿@model GuestBook.ViewModels.GuestFormViewModel
+
+@using (Html.BeginForm("SaveBusinessClient", "Guests", FormMethod.Post, new { @id = "businessGuestForm" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>New Business client</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label class="control-label col-md-2">Company name</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Company's registration number</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label col-md-2">Payment type</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.PaymentTypeId, new SelectList(Model.PaymentTypes, "Id", "Name"), "Select Payment type", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PaymentTypeId,"", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label col-md-2">Number of participants</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumberGuests, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumberGuests, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label col-md-2">Additional information</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Information, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Information, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+            $('#businessGuestForm').submit(function (ev) {
+                toastr.success('New business client has created.');
+            });
+        });
+    </script>
+}

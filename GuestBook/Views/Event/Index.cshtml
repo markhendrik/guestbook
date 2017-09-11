@@ -1,0 +1,88 @@
+﻿@model IEnumerable<GuestBook.Models.Event>
+
+<h4>Events</h4>
+<hr />
+
+<table id="eventsListId" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateBeg)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateEnd)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Information)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberGuestsTotal)
+        </th>
+        
+    </tr>
+    </thead>
+    
+
+    <tfoot>
+    <tr>
+    <th>
+        @Html.DisplayNameFor(model => model.Name)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.DateBeg)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.DateEnd)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.Address)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.Information)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.NumberGuestsTotal)
+    </th>
+    
+    </tfoot>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Edit", new { id = item.Id })
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateBeg)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Information)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberGuestsTotal)
+                </td>
+ 
+            </tr>
+        }
+
+</table>
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            $("#eventsListId").DataTable();
+
+        });
+    </script>
+}
